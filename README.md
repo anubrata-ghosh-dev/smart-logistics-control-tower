@@ -1,137 +1,57 @@
-🚚 Smart Logistics Control Tower
+# AI-Powered Supply Chain Decision Intelligence — Backend
 
-Predictive Supply Chain Disruption & Resource Allocation System
+## Quick Start
 
+```bash
+# 1. Clone / download this folder
+cd supply-chain-backend
 
-📌 Problem Statement
+# 2. Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 
-Modern global supply chains operate across complex and volatile transportation networks. Disruptions such as extreme weather, traffic congestion, and operational bottlenecks are often identified only after delays occur, leading to inefficiencies, increased costs, and missed delivery deadlines.
-
-
-## 💡 Our Solution
-
-We built a Predictive Supply Chain Control Tower that enables real-time monitoring, disruption prediction, and intelligent resource allocation.
-```
-Instead of reacting to delays, our system:
-	•	Detects potential risks in advance
-	•	Predicts shipment delays
-	•	Suggests optimized routes and resource reallocation
-```
-
-## 🎯 Key Features
-```
-🚀 Real-Time Shipment Tracking
-	•	Simulated live tracking of shipments
-	•	Displays route, speed, and ETA
-
-⚠️ Disruption Prediction Engine
-	•	Detects risks using:
-	•	Weather conditions
-	•	Traffic congestion
-	•	Speed anomalies
-	•	Assigns a risk score to each shipment
-
-🔄 Smart Resource Allocation
-	•	Suggests:
-	•	Alternate routes
-	•	Shipment prioritization
-	•	Dynamic rerouting decisions
-
-📊 Interactive Dashboard
-	•	Visual map-based tracking
-	•	Real-time alerts
-	•	Actionable insights
-```
-
-## 🧠 System Architecture
-
-```Data Sources → Backend (FastAPI) → Prediction Engine → Allocation Engine → Frontend Dashboard```
-
-## Components:
-```
-	•	Input Layer: Shipment + external APIs (weather, traffic)
-	•	Prediction Engine: Identifies potential disruptions
-	•	Allocation Engine: Suggests optimized decisions
-	•	Frontend: Displays insights and alerts
-```
-
-## 🛠️ Tech Stack
-
-```
-Backend:
-	•	Python
-	•	FastAPI
-
-Frontend:
-	•	React (Vite)
-
-Database:
-	•	SQLite (initial)
-
-APIs:
-	•	OpenWeather API
-	•	Map APIs (Leaflet / Google Maps)
-```
-
-## 📁 Project Structure
-
-```
-smart-logistics-control-tower/
-├── backend/
-│   ├── app/
-│   │   ├── api/            # API routes (endpoints)
-│   │   ├── services/       # Core logic (prediction, allocation)
-│   │   ├── models/         # Database models
-│   │   ├── schemas/        # Request/response schemas
-│   │   ├── core/           # Config & utilities
-│   │   └── main.py         # App entry point
-│   ├── requirements.txt
-│   └── run.py
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/     # UI components
-│   │   ├── pages/          # Screens (Dashboard)
-│   │   ├── services/       # API calls
-│   │   ├── hooks/          # Custom hooks
-│   │   ├── utils/          # Helper functions
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│
-├── README.md
-└── .gitignore
-```
-
-## ⚙️ How to Run
-```
-1️⃣ Clone the repository
-git clone https://github.com/your-username/smart-logistics-control-tower.git
-cd smart-logistics-control-tower
-
-2️⃣ Backend Setup
-cd backend
+# 3. Install dependencies
 pip install -r requirements.txt
+
+# 4. Configure environment variables
+cp .env.example .env
+# Open .env and paste your OpenWeatherMap API key
+
+# 5. Run the server
 uvicorn app.main:app --reload
-
-3️⃣ Frontend Setup
-cd frontend
-npm install
-npm run dev
 ```
 
-## 🚧 Future Improvements
-```
-	•	Machine Learning-based delay prediction
-	•	Real-time GPS integration
-	•	Multi-shipment optimization
-	•	Advanced route optimization algorithms
-```
+Open **http://127.0.0.1:8000/docs** for the interactive Swagger UI.
 
-## 🎯 Impact
+---
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/shipments` | All shipments with risk + decision |
+| GET | `/api/v1/alerts` | High-risk shipments only (risk ≥ 0.60) |
+| GET | `/api/v1/decisions/{id}` | Detailed decision card for one shipment |
+| GET | `/api/v1/simulate/{id}` | What-if alternate route analysis |
+
+---
+
+## Architecture
+
 ```
-This system helps:
-	•	Reduce delivery delays
-	•	Optimize logistics operations
-	•	Improve decision-making in supply chains
+backend/app/
+├── core/config.py          ← Environment variables + thresholds
+├── models/shipment.py      ← Pydantic data models
+├── data/seed.py            ← Simulated shipment fleet (demo data)
+├── services/
+│   ├── weather.py          ← OpenWeatherMap API integration
+│   ├── geopolitical.py     ← Chokepoint proximity risk
+│   ├── prediction.py       ← Composite risk engine (weighted sum)
+│   ├── allocation.py       ← Priority assignment by cargo type
+│   ├── decisions.py        ← Decision matrix (reroute/delay/monitor)
+│   └── simulation.py       ← Movement simulator + what-if analyser
+└── api/
+    ├── shipments.py        ← GET /shipments
+    ├── alerts.py           ← GET /alerts
+    └── decisions.py        ← GET /decisions/{id}  GET /simulate/{id}
 ```
