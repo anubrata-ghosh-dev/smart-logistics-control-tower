@@ -1,9 +1,0 @@
-<<<<<<< HEAD
-=======
-venv/
-__pycache__/
-*.pyc
-node_modules/
-.env
-.DS_Store
->>>>>>> origin/main
