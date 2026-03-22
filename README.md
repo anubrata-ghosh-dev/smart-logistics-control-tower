@@ -43,9 +43,9 @@ Instead of reacting to delays, our system:
 	•	Actionable insights
 
 
-🧠 System Architecture
+## 🧠 System Architecture
 
-Data Sources → Backend (FastAPI) → Prediction Engine → Allocation Engine → Frontend Dashboard
+```Data Sources → Backend (FastAPI) → Prediction Engine → Allocation Engine → Frontend Dashboard```
 
 Components:
 	•	Input Layer: Shipment + external APIs (weather, traffic)
