@@ -8,7 +8,7 @@ Predictive Supply Chain Disruption & Resource Allocation System
 Modern global supply chains operate across complex and volatile transportation networks. Disruptions such as extreme weather, traffic congestion, and operational bottlenecks are often identified only after delays occur, leading to inefficiencies, increased costs, and missed delivery deadlines.
 
 
-##💡 Our Solution
+## 💡 Our Solution
 
 We built a Predictive Supply Chain Control Tower that enables real-time monitoring, disruption prediction, and intelligent resource allocation.
 ```
@@ -18,7 +18,7 @@ Instead of reacting to delays, our system:
 	•	Suggests optimized routes and resource reallocation
 ```
 
-##🎯 Key Features
+## 🎯 Key Features
 ```
 🚀 Real-Time Shipment Tracking
 	•	Simulated live tracking of shipments
@@ -103,7 +103,7 @@ smart-logistics-control-tower/
 └── .gitignore
 ```
 
-##⚙️ How to Run
+## ⚙️ How to Run
 ```
 1️⃣ Clone the repository
 git clone https://github.com/your-username/smart-logistics-control-tower.git
@@ -120,7 +120,7 @@ npm install
 npm run dev
 ```
 
-##🚧 Future Improvements
+## 🚧 Future Improvements
 ```
 	•	Machine Learning-based delay prediction
 	•	Real-time GPS integration
@@ -128,7 +128,7 @@ npm run dev
 	•	Advanced route optimization algorithms
 ```
 
-##🎯 Impact
+## 🎯 Impact
 ```
 This system helps:
 	•	Reduce delivery delays
