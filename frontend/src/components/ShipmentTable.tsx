@@ -27,7 +27,7 @@ export function ShipmentTable({ shipments, onSelect, selected }: Props) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]">
-              {["ID", "Origin → Dest", "Cargo", "Speed", "Risk", "Status", "Priority", "Decision"].map(h => (
+              {["ID", "Origin → Dest", "Cargo", "Weather", "Dist. (NM)", "Speed", "Risk", "Status", "Priority", "Decision"].map(h => (
                 <th key={h} className="px-3 py-2.5 text-left text-[11px] font-semibold uppercase tracking-widest whitespace-nowrap">
                   {h}
                 </th>
@@ -55,6 +55,12 @@ export function ShipmentTable({ shipments, onSelect, selected }: Props) {
                 </td>
                 <td className="px-3 py-3 text-xs text-[hsl(var(--muted-foreground))] max-w-[120px] truncate">
                   {s.cargo_type}
+                </td>
+                <td className="px-3 py-3 whitespace-nowrap text-xs">
+                  {s.weather}
+                </td>
+                <td className="px-3 py-3 whitespace-nowrap text-xs text-[hsl(var(--muted-foreground))]">
+                  {s.distance_to_dest.toLocaleString()} nm
                 </td>
                 <td className="px-3 py-3 whitespace-nowrap">
                   <span className={cn(

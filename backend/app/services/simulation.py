@@ -48,19 +48,19 @@ def simulate_alternate_route(shipment: Shipment) -> SimulationResponse:
     Looks up known alternate corridors first; falls back to a generic
     coastal re-route if the pair is not in the database.
 
-    Returns delay reduction (hours) and estimated extra cost (USD).
+    Returns delay reduction (hours) and estimated extra cost (INR).
     """
     key = (shipment.origin, shipment.destination)
-    route_name, delay_hrs, cost_usd = ALTERNATE_ROUTES.get(key, DEFAULT_ALTERNATE)
+    route_name, delay_hrs, cost_INR = ALTERNATE_ROUTES.get(key, DEFAULT_ALTERNATE)
 
     # Vary slightly so repeated calls feel dynamic
     delay_hrs_jitter = delay_hrs + random.randint(-3, 3)
-    cost_jitter      = cost_usd  + random.randint(-5000, 5000)
+    cost_jitter      = cost_INR  + random.randint(-5000, 5000)
 
     recommendation = (
         f"Switch to '{route_name}' to avoid current risk zone. "
         f"Expected delay reduction: ~{delay_hrs_jitter} hours. "
-        f"Additional cost: ~${cost_jitter:,} USD."
+        f"Additional cost: ~₹{cost_jitter:,} INR."
     )
 
     return SimulationResponse(

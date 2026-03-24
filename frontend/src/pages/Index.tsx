@@ -8,9 +8,10 @@ import { ShipmentTable } from "@/components/ShipmentTable";
 import { AlertsPanel } from "@/components/AlertsPanel";
 import { DecisionPanel } from "@/components/DecisionPanel";
 import { SimulationModal } from "@/components/SimulationModal";
+import { ModeToggle } from "@/components/mode-toggle";
 import {
   Ship, AlertTriangle, CheckCircle, RefreshCw,
-  Activity, Globe, TrendingUp, Wifi
+  Activity, Globe, TrendingUp, Wifi, Search
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ export default function Index() {
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [tick, setTick] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const refresh = useCallback(() => {
     setIsRefreshing(true);
@@ -49,11 +51,18 @@ export default function Index() {
     }
   }, [shipments]);
 
+  const filteredShipments = shipments.filter(s =>
+    s.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.destination.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.cargo_type.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // Derived metrics
-  const critical   = shipments.filter(s => s.risk_score >= 0.65).length;
-  const atRisk     = shipments.filter(s => s.risk_score >= 0.35 && s.risk_score < 0.65).length;
-  const onTime     = shipments.filter(s => s.risk_score < 0.35).length;
-  const avgConf    = shipments.length ? Math.round(shipments.reduce((a, b) => a + b.confidence, 0) / shipments.length * 100) : 0;
+  const critical = filteredShipments.filter(s => s.risk_score >= 0.65).length;
+  const atRisk = filteredShipments.filter(s => s.risk_score >= 0.35 && s.risk_score < 0.65).length;
+  const onTime = filteredShipments.filter(s => s.risk_score < 0.35).length;
+  const avgConf = filteredShipments.length ? Math.round(filteredShipments.reduce((a, b) => a + b.confidence, 0) / filteredShipments.length * 100) : 0;
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
@@ -70,9 +79,22 @@ export default function Index() {
           </div>
         </div>
 
+        {/* Search bar */}
+        <div className="ml-6 relative hidden md:block w-64 fade-in">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))]" size={14} />
+          <input
+            type="text"
+            placeholder="Search ships, origin, destination, cargo..."
+            className="w-full bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] rounded-md pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[hsl(var(--primary))] transition-colors"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         {/* live indicator */}
         <div className="ml-auto flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-[11px] text-[hsl(var(--muted-foreground))]">
+          <ModeToggle />
+          <div className="flex items-center gap-1.5 text-[11px] text-[hsl(var(--muted-foreground))] hidden sm:flex">
             <Wifi size={11} className="text-[hsl(var(--status-ok))]" />
             <span>Live  ·  refreshes every {REFRESH_INTERVAL_MS / 1000}s</span>
           </div>
@@ -102,7 +124,7 @@ export default function Index() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <MetricCard
               label="Total Vessels"
-              value={shipments.length}
+              value={filteredShipments.length}
               sub="active in fleet"
               icon={<Ship size={16} className="text-[hsl(var(--primary))]" />}
               accent="default"
@@ -142,7 +164,7 @@ export default function Index() {
                 </div>
               ) : (
                 <ShipmentTable
-                  shipments={shipments}
+                  shipments={filteredShipments}
                   onSelect={setSelected}
                   selected={selected?.id ?? null}
                 />
@@ -151,7 +173,7 @@ export default function Index() {
 
             {/* Alerts panel */}
             <div className="fade-up" style={{ animationDelay: "160ms" }}>
-              <AlertsPanel shipments={shipments} onSelect={setSelected} />
+              <AlertsPanel shipments={filteredShipments} onSelect={setSelected} />
             </div>
           </div>
 
