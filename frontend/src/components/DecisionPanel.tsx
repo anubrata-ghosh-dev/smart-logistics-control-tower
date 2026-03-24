@@ -1,12 +1,12 @@
 /**
  * DecisionPanel.tsx — Right-side panel showing full decision breakdown for a selected shipment.
  */
-import React from "react";
-import { Shipment } from "@/lib/mockData";
+import React, { useState, useEffect } from "react";
+import { Shipment, addIncidentNote } from "@/lib/mockData";
 import { StatusBadge } from "./StatusBadge";
 import { RiskBar } from "./RiskBar";
 import { DecisionIcon } from "./DecisionIcon";
-import { X, Route } from "lucide-react";
+import { X, Route, LifeBuoy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -17,10 +17,20 @@ interface Props {
 
 const CONF_COLOR = (c: number) =>
   c >= 0.85 ? "text-[hsl(var(--status-ok))]" :
-  c >= 0.65 ? "text-[hsl(var(--status-warn))]" :
-              "text-[hsl(var(--status-critical))]";
+    c >= 0.65 ? "text-[hsl(var(--status-warn))]" :
+      "text-[hsl(var(--status-critical))]";
 
 export function DecisionPanel({ shipment, onClose, onSimulate }: Props) {
+  const [noteText, setNoteText] = useState("");
+
+  useEffect(() => {
+    if (shipment) setNoteText(shipment.incident_note || "");
+  }, [shipment?.id]);
+
+  const handleSaveNote = () => {
+    if (shipment) addIncidentNote(shipment.id, noteText);
+  };
+
   return (
     <div className={cn(
       "fixed top-0 right-0 h-full w-80 z-40 flex flex-col",
@@ -50,6 +60,15 @@ export function DecisionPanel({ shipment, onClose, onSimulate }: Props) {
               <p className="text-xs text-[hsl(var(--muted-foreground))] mb-1">Route</p>
               <p className="font-semibold text-sm">{shipment.origin} → {shipment.destination}</p>
               <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">{shipment.cargo_type}</p>
+            </div>
+
+            {/* Nearest Help */}
+            <div className="card-surface p-3 border border-[hsl(var(--status-warn)/0.3)] bg-[hsl(var(--status-warn)/0.03)]">
+              <p className="text-[10px] uppercase font-bold text-[hsl(var(--status-warn))] tracking-wide mb-1">Nearest Rescue Hub</p>
+              <div className="flex items-center gap-2">
+                <LifeBuoy size={16} className="text-[hsl(var(--status-warn))]" />
+                <span className="font-semibold text-[13px]">{shipment.nearest_help}</span>
+              </div>
             </div>
 
             {/* Decision */}
@@ -99,6 +118,23 @@ export function DecisionPanel({ shipment, onClose, onSimulate }: Props) {
               <Route size={15} />
               Run What-If Simulation
             </button>
+
+            {/* Incident Notes */}
+            <div className="card-surface p-3 mt-4 space-y-2 border-t border-[hsl(var(--border)/0.5)] pt-4">
+              <p className="text-xs text-[hsl(var(--muted-foreground))] uppercase tracking-wide">Realtime Incident Log</p>
+              <textarea
+                className="w-full h-20 bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] rounded-md p-2 text-xs text-[hsl(var(--foreground))] focus:outline-none focus:ring-1 focus:ring-[hsl(var(--primary))] resize-none"
+                placeholder="Log event details..."
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+              />
+              <button
+                onClick={handleSaveNote}
+                className="w-full py-1.5 rounded-md bg-[hsl(var(--primary)/0.15)] text-[hsl(var(--primary))] text-xs font-semibold hover:bg-[hsl(var(--primary)/0.25)] transition-colors"
+              >
+                Save Note
+              </button>
+            </div>
           </div>
         </>
       )}

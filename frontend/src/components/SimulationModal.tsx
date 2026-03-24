@@ -1,10 +1,10 @@
 /**
  * SimulationModal.tsx — What-if route simulation dialog.
  */
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SimulationResult, Shipment, simulateRoute } from "@/lib/mockData";
-import { Route, Clock, DollarSign, ArrowRight } from "lucide-react";
+import { Route, Clock, IndianRupee, DollarSign, ArrowRight } from "lucide-react";
 
 interface Props {
   shipment: Shipment | null;
@@ -12,8 +12,15 @@ interface Props {
 }
 
 export function SimulationModal({ shipment, onClose }: Props) {
+  const [currency, setCurrency] = useState<"INR" | "USD">("INR");
+
   if (!shipment) return null;
   const sim: SimulationResult = simulateRoute(shipment);
+
+  const inrToUsd = (inr: number) => Math.round(inr / 83);
+  const displayCost = currency === "INR" ? sim.cost_increase_INR : inrToUsd(sim.cost_increase_INR);
+  const CurrencyIcon = currency === "INR" ? IndianRupee : DollarSign;
+  const currencySymbol = currency === "INR" ? "₹" : "$";
 
   return (
     <Dialog open={!!shipment} onOpenChange={() => onClose()}>
@@ -50,12 +57,24 @@ export function SimulationModal({ shipment, onClose }: Props) {
             </div>
           </div>
           <div className="card-surface p-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[hsl(var(--status-warn)/0.15)] flex items-center justify-center">
-              <DollarSign size={16} className="text-[hsl(var(--status-warn))]" />
+            <div
+              className="w-8 h-8 rounded-lg bg-[hsl(var(--status-warn)/0.15)] flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => setCurrency(prev => prev === "INR" ? "USD" : "INR")}
+              title="Click to toggle currency"
+            >
+              <CurrencyIcon size={16} className="text-[hsl(var(--status-warn))]" />
             </div>
             <div>
-              <p className="text-xs text-[hsl(var(--muted-foreground))]">Extra Cost</p>
-              <p className="font-bold text-[hsl(var(--status-warn))]">+${sim.cost_increase_usd.toLocaleString()}</p>
+              <p className="text-xs text-[hsl(var(--muted-foreground))] flex items-center gap-1">
+                Extra Cost
+                <span
+                  className="text-[10px] bg-[hsl(var(--muted))] px-1 rounded cursor-pointer hover:bg-[hsl(var(--muted-foreground)/0.2)] transition-colors"
+                  onClick={() => setCurrency(prev => prev === "INR" ? "USD" : "INR")}
+                >
+                  {currency}
+                </span>
+              </p>
+              <p className="font-bold text-[hsl(var(--status-warn))]">+{currencySymbol}{displayCost.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -63,7 +82,9 @@ export function SimulationModal({ shipment, onClose }: Props) {
         {/* Recommendation */}
         <div className="p-3 rounded-lg border border-[hsl(var(--primary)/0.3)] bg-[hsl(var(--primary)/0.07)]">
           <p className="text-xs text-[hsl(var(--muted-foreground))] mb-1 uppercase tracking-wide">AI Recommendation</p>
-          <p className="text-sm leading-relaxed">{sim.recommendation}</p>
+          <p className="text-sm leading-relaxed">
+            {sim.recommendation.replace(/~₹[\d,]+/, `~${currencySymbol}${displayCost.toLocaleString()}`)}
+          </p>
         </div>
       </DialogContent>
     </Dialog>
