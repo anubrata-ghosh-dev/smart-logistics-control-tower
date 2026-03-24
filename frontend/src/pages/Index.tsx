@@ -65,8 +65,8 @@ export default function Index() {
             <Globe size={16} className="text-[hsl(var(--primary))]" />
           </div>
           <div>
-            <h1 className="font-bold text-sm leading-none">Supply Chain Intelligence</h1>
-            <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-0.5">AI Decision Control Tower</p>
+            <h1 className="font-bold text-sm leading-none">SmartChain AI</h1>
+            <p className="text-[10px] text-[hsl(var(--muted-foreground))] mt-0.5">AI-Powered Supply Chain Optimization</p>
           </div>
         </div>
 

@@ -11,13 +11,13 @@
 @layer base {
   :root {
     /* ── Base surfaces ────────────────────────────── */
-    --background:            220 28% 7%;      /* deep navy */
-    --surface:               220 24% 11%;     /* card surface */
-    --surface-raised:        220 22% 14%;     /* elevated card */
+    --background:            222 47% 11%;      /* deep navy */
+    --surface:               222 24% 11%;     /* card surface */
+    --surface-raised:        222 22% 14%;     /* elevated card */
     --foreground:            210 20% 92%;     /* near-white text */
 
     /* ── Shadcn-compat aliases ────────────────────── */
-    --card:                  220 24% 11%;
+    --card:                  222 24% 11%;
     --card-foreground:       210 20% 92%;
     --popover:               220 22% 13%;
     --popover-foreground:    210 20% 92%;

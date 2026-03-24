@@ -21,7 +21,7 @@ const ACCENT_CLS: Record<string, string> = {
 
 export function MetricCard({ label, value, sub, accent = "default", icon }: Props) {
   return (
-    <div className="card-raised p-4 flex flex-col gap-1 fade-up">
+    <div className="card card-raised p-4 flex flex-col gap-1 fade-up hover:scale-105 hover:shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-all duration-300">
       <div className="flex items-center justify-between">
         <span className="text-xs text-[hsl(var(--muted-foreground))] uppercase tracking-widest">{label}</span>
         {icon && <span className="opacity-60">{icon}</span>}
